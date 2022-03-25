@@ -41,7 +41,7 @@ const meals: object[] = [
         id: 4,
         name: 'Baguettes',
         category: 'BAKED',
-        timeToPrepare: 180,
+        timeToPrepare: 200,
         calories: 400,
         image: 'baguettes.jpg'
     },
@@ -79,7 +79,19 @@ const meals: object[] = [
     },
 ];
 
-console.log(meals[1].category);
+function timeUnit(minutes: number) {
+    if (minutes < 60) {
+        if (minutes == 1) {
+            return `${minutes} minute`;
+        }
+        return `${minutes} minutes`;
+    }    
+    minutes = Math.round(minutes / 60);
+    if (minutes == 1) {
+        return `${minutes} hour`;
+    }
+    return `${minutes} hours`;
+}
 
 </script>
 
@@ -93,12 +105,12 @@ console.log(meals[1].category);
 <div class="flex w-full justify-center">
     <div class="w-full max-w-screen-lg mx-8">
         <div class="flex justify-between my-10">
-            <input type="text" class="border">
+            <input type="text" placeholder="Search" class="h-10 w-1/3 rounded-lg p-3 bg-white">
             <p>category</p>
         </div>
     
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center gap-8 mb-10">
-            <RecipeCard v-for="meal in meals" :category="meal.category" :name="meal.name" :timeToPrepare="meal.timeToPrepare" :calories="meal.calories" :image="meal.image"></RecipeCard>
+        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 items-center gap-8 mb-10">
+            <RecipeCard v-for="meal in meals" :category="meal.category" :name="meal.name" :timeToPrepare="timeUnit(meal.timeToPrepare)" :calories="meal.calories" :image="meal.image"></RecipeCard>
         </div>
     </div>
 </div>
