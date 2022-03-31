@@ -1,7 +1,14 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import RecipeCard from '@/components/RecipeCard.vue'
+import { ref } from 'vue'
+
+const isDark = ref(false);
+
+const switchTheme = () => isDark.value = !isDark.value;
+
+const getImageUrl = (path: string) => {
+  return new URL(`../assets/${path}`, import.meta.url).href
+}
 
 type recipe = {
     id: number;
@@ -12,7 +19,7 @@ type recipe = {
     image: string;
 }
 
-const meals: object[] = [
+const meals: Array<recipe> = [
     {
         id: 1,
         name: 'Spaghetti bolognese',
@@ -79,7 +86,7 @@ const meals: object[] = [
     },
 ];
 
-function timeUnit(minutes: number) {
+const timeUnit = (minutes: number) => {
     if (minutes < 60) {
         if (minutes == 1) {
             return `${minutes} minute`;
@@ -97,20 +104,29 @@ function timeUnit(minutes: number) {
 
 
 <template>
-<nav class="flex justify-between m-3">
-    <h1 class="text-2xl">Lavory</h1>
-    <h1 class="text-lg">About</h1>
-</nav>
-
-<div class="flex w-full justify-center">
-    <div class="w-full max-w-screen-lg mx-8">
-        <div class="flex justify-between my-10">
-            <input type="text" placeholder="Search" class="h-10 w-1/3 rounded-lg p-3 bg-white">
-            <p>category</p>
-        </div>
-    
-        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 items-center gap-8 mb-10">
-            <RecipeCard v-for="meal in meals" :category="meal.category" :name="meal.name" :timeToPrepare="timeUnit(meal.timeToPrepare)" :calories="meal.calories" :image="meal.image"></RecipeCard>
+<div :class="isDark ? 'dark' : ''">
+    <div class="bg-background dark:bg-background-dark transition-colors">
+        <nav class="flex justify-between p-3">
+            <h1 class="text-2xl text-black dark:text-white">Lavory</h1>
+            <div class="flex gap-4">
+                <button v-on:click="switchTheme()" class="text-lg text-black dark:text-white">
+                    <img v-if="isDark" :src="getImageUrl('brightness-high-fill.svg')" alt="dark mode" class="invert transition-colors">
+                    <img v-else :src="getImageUrl('moon-fill.svg')" alt="dark mode">
+                </button>
+            </div>
+        </nav>
+        
+        <div class="flex w-full justify-center">
+            <div class="w-full max-w-screen-lg mx-8">
+                <div class="flex justify-between my-10">
+                    <input type="text" placeholder="Search" class="h-10 w-1/3 rounded-lg p-3 transition-all bg-white dark:bg-secondary-dark text-black dark:text-white  focus:outline outline-primary">
+                    <p class="text-black dark:text-white">category</p>
+                </div>
+            
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 items-center gap-8 sm:gap-12 mb-10">
+                    <RecipeCard v-for="meal in meals" :category="meal.category" :name="meal.name" :timeToPrepare="timeUnit(meal.timeToPrepare)" :calories="meal.calories" :image="meal.image"></RecipeCard>
+                </div>
+            </div>
         </div>
     </div>
 </div>
